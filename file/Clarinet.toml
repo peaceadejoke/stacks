@@ -1,8 +1,8 @@
 [project]
 name = "dynamic-nft"
 authors = ["Peace <peacerichard153@gmail.com>"]
-description = "A Dynamic NFT project on Stacks"
-version = "0.3.0"
+description = "A Dynamic NFT project on Stacks with oracle, metadata, and dynamic UI"
+version = "0.4.0"
 clarity_version = 2
 
 [contracts.dynamic-nft]
@@ -11,4 +11,8 @@ depends_on = []
 
 [contracts.dynamic-nft-oracle]
 path = "contracts/dynamic-nft-oracle.clar"
+depends_on = ["dynamic-nft"]
+
+[contracts.dynamic-nft-metadata]
+path = "contracts/dynamic-nft-metadata.clar"
 depends_on = ["dynamic-nft"]

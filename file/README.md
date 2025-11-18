@@ -1,79 +1,51 @@
-# Dynamic NFT on Stacks — Phase 2
+# Dynamic NFT Project (Final Phase)
 
-This project now includes two Clarity smart contracts:
+This project implements a Dynamic NFT system on the Stacks blockchain, featuring:
 
-1. **dynamic-nft.clar** — Core NFT with dynamic metadata  
-2. **dynamic-nft-oracle.clar** — External trigger that updates the NFT state
+- **Dynamic NFT contract**: NFTs whose metadata changes based on an external oracle.
+- **Oracle contract**: Pushes updates to NFT state, with access control and history logging.
+- **Metadata Registry contract**: Stores NFT metadata (title, description, image-url) with admin control.
+- **Frontend Dashboard**: Displays NFTs, oracle values, and history. Allows admin interactions.
 
-The second contract acts like a trusted oracle, a scheduler, or a backend bridge for off-chain events.
+## **Setup**
 
----
+1. Install Clarinet: `npm install -g @hirosystems/clarinet`
+2. Run tests: `clarinet test`
+3. Deploy contracts in dependency order:
+   1. `dynamic-nft`
+   2. `dynamic-nft-oracle`
+   3. `dynamic-nft-metadata`
+4. Connect the frontend wallet using Stacks.js.
 
-## New Contract: `dynamic-nft-oracle.clar`
+## **Usage Examples**
 
-### Purpose
-The oracle contract controls external values that affect NFT metadata.  
-It stores a `latest-value` and pushes it into the NFT contract using:
+### Admin Actions
+- Update oracle: `update-value(new-value)`
+- Push to NFT: `push-to-nft()`
+- Set NFT metadata: `set-metadata(id, title, description, imageUrl)`
+- Manage authorized callers: `add-authorized(who)`, `remove-authorized(who)`
 
-(contract-call? .dynamic-nft update-state <value>)
+### Read-Only Queries
+- Latest oracle value: `get-latest-value()`
+- History count: `get-history-count()`
+- History by index: `get-history-by-index(index)`
+- NFT metadata: `get-metadata(id)`
 
+## **Security**
+- Access control enforced via `admin` and `authorized-map`.
+- Safe cross-contract calls with history logging only on success.
+- Input validation on metadata to prevent empty or invalid values.
 
-### Features
-- Admin-restricted value updates  
-- Trigger method to sync state to NFT  
-- Read-only data access  
-- Supports automation (cron-like scripts) or price feed integration  
+## **Project Structure**
 
----
-
-## Project Structure
-
-
-
-dynamic-nft/
-├── contracts/
-│ ├── dynamic-nft.clar
-│ └── dynamic-nft-oracle.clar
-├── tests/
-│ └── dynamic-nft_test.ts
-├── Clarinet.toml
-└── README.md
-
-
----
-
-## How to Use the Oracle
-
-### 1. Update the oracle’s internal value
-```clarity
-(contract-call? .dynamic-nft-oracle update-value u5)
-
-2. Push the new value to the NFT
-(contract-call? .dynamic-nft-oracle push-to-nft)
-
-3. Retrieve updated token URI
-(contract-call? .dynamic-nft get-token-uri u1)
-
-Why This Architecture?
-
-Separates metadata logic from event logic
-
-Reduces attack surface
-
-Easier to integrate with off-chain triggers
-
-Cleaner upgrade paths
-
-Matches real-world dynamic NFT design patterns
-
-Next Steps (Phase 3 Options)
-
-Add test suite
-
-Add frontend (Stacks.js + React)
-
-Add metadata server/API
-
-Store multiple oracle states
-
-Add NFT burn/transfer hooks
+contracts/
+dynamic-nft.clar
+dynamic-nft-oracle.clar
+dynamic-nft-metadata.clar
+frontend/
+Dashboard.jsx
+tests/
+dynamic-nft_test.ts
+dynamic-nft-oracle_test.ts
+Clarinet.toml
+README.md
