@@ -2,7 +2,7 @@
 name = "dynamic-nft"
 authors = ["Peace <peacerichard153@gmail.com>"]
 description = "A Dynamic NFT project on Stacks"
-version = "0.2.0"
+version = "0.3.0"
 clarity_version = 2
 
 [contracts.dynamic-nft]
